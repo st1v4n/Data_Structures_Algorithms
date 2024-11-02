@@ -1,0 +1,160 @@
+<1>
+Removing Duplicates from ascending list
+  /*
+ * Complete the 'removeDuplicates' function below.
+ *
+ * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
+ * The function accepts INTEGER_SINGLY_LINKED_LIST llist as parameter.
+ */
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+
+SinglyLinkedListNode* removeDuplicates(SinglyLinkedListNode* head) {
+    if(!head)return head;
+    SinglyLinkedListNode* start = head;
+    SinglyLinkedListNode* curr = head->next;
+    SinglyLinkedListNode* prev = head;
+    while(curr){
+        if(curr->data == prev->data){
+            prev->next = curr->next;
+        }
+        else{
+            prev = curr;
+        }
+        curr = curr->next;
+    }
+    return start;
+}
+
+<2>
+
+  /*
+ * Complete the 'insertNodeAtPosition' function below.
+ *
+ * The function is expected to return an INTEGER_SINGLY_LINKED_LIST.
+ * The function accepts following parameters:
+ *  1. INTEGER_SINGLY_LINKED_LIST llist
+ *  2. INTEGER data
+ *  3. INTEGER position
+ */
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+
+SinglyLinkedListNode* insertNodeAtPosition(SinglyLinkedListNode* head, int data, int position) {
+    if(!head)return head;
+    SinglyLinkedListNode* toInsert = new SinglyLinkedListNode(data);
+    SinglyLinkedListNode* start = head;
+    int curr = 1;
+    while(head){
+        if(curr == position){
+            SinglyLinkedListNode* nxt = head->next;
+            head->next = toInsert;
+            toInsert->next = nxt;
+            break;
+        }
+        curr++;
+        head = head->next;
+    }
+    return start;
+}
+
+
+<3>
+Reverse a linked list by k groups
+Example:
+6 //n 
+1 2 3 4 5 6
+3 //k
+Result :
+3 2 1 6 5 4
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <list>
+using namespace std;
+struct Node {
+    int data = 0;
+    Node* next = nullptr;
+    Node* prev = nullptr;
+    Node(int data, Node* nxt, Node* prv) {
+        this->data = data;
+        next = nxt;
+        prev = prv;
+    }
+};
+
+int main() {
+    int N;
+    cin >> N;
+    int num;
+    cin >> num;
+    Node* head = new Node(num, nullptr, nullptr);
+    Node* start = head;
+    Node* result = head;
+    for (int i = 1;i < N;i++) {
+        int num;
+        cin >> num;
+        Node* curr = new Node(num, nullptr, head);
+        head->next = curr;
+        head = head->next;
+    }
+    int K;
+    cin >> K;
+    while (true) {
+        Node* left = start;
+        for (int i = 0; i < K - 1; i++) {
+            Node* nxt = start->next;
+            start->next = start->prev;
+            start->prev = nxt;
+            start = nxt;
+        }
+        Node* nxt = start->next;
+        start->next = start->prev;
+        start->prev = left->next;
+        start = nxt;
+        N -= K;
+        if (N < K) {
+            if(N==0)left->next = nullptr;
+            else {
+                for (int i = 0;i < N;i++) {
+                    left->next = start;
+                    left = left->next;
+                    start = start->next;
+                }
+            }
+            break;
+        }
+        Node* curr = start;
+        for (int i = 0; i < K-1; i++) {
+            left->next = curr;
+            curr = curr->next;
+        }
+        left->next = curr;
+    }
+    while (result->prev) {
+        result = result->prev;
+    }
+    while (result) {
+        cout << result->data << ' ';
+        result = result->next;
+    }
+    return 0;
+}
